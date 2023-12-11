@@ -34,6 +34,6 @@ angle_based-stylized_betweenness <- function(X){
 	difference_vectors <- X-X[l,]
 	stylized_betweenness[,l,] <- celltrackR::vecAngle(difference_vectors[indexs$Var1,],difference_vectors[indexs$Var2,])
 	}
-return(stylized_betweenness)}
+return(stylized_betweenness/180)}
 
 absb <- angle_based-stylized-betweeeness
