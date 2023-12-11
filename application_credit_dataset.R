@@ -1,7 +1,7 @@
 # set working directory
 setwd("C:/Git/paperproject_starshaped-subgroup_discovery")
 library(foreign)
-dat <- read.arff("dataset_31_credit-g.arff")
+dat <- read.arff("datasets/dataset_31_credit-g.arff")
 dim(dat)
 # 
 
@@ -49,3 +49,25 @@ model_2 <- oofos:::add_sos_constraints(model_2,result_1$objval)
 # add semioptimal solution as a start vector
 model_2$start <- round(result_1$x,2)
 result_2 <- gurobi::gurobi(model_2,list(timelimit=60*20))
+
+
+result_2$objval
+
+# [1] 0.3519048
+# no improvement in 20 minutes
+
+# save result
+saveRDS(result_2,"results_credit_data/result_2.RDS")
+
+
+############################################################################
+# Starshaped Subgroup Discovery with angle based stylized betweenness
+############################################################################
+
+indexs_numerical_variables <- c(2,5,8,11,13,16,18)
+
+absb <- get_absb(as.matrix(dat[,indexs_numerical_variables]))
+
+saveRDS(absb,"results_credit_data/absb.RDS")
+
+discovery_absb <- oofos:::discover_starshaped_subgroups(stylized_betweenness=absb,objective=objective,local_vc_dimension=100) 
