@@ -1,4 +1,5 @@
- sb <- function(context){
+# object based stylized betweenness (OBSB)
+object_based_sytlized_betweenness <- function(context){
    n_objects <- nrow(context)
    stylized_betweenness <- array(as.logical(FALSE),rep(n_objects,3))
    for( k in seq_len(n_objects)){
@@ -17,9 +18,10 @@
 	}
   }
 return(stylized_betweenness)}
+obsb <- object_based_stylized_betweenness
 
-
-sb_geom <- function(X){
+# angle based stylized betweenness (ABSB)
+angle_based-stylized_betweenness <- function(X){
   n_objects <- nrow(X)
   stylized_betweenness <- array(0,rep(n_objects,3))
   indexs <- expand.grid(seq_len(n_objects),seq_len(n_objects))
@@ -29,3 +31,5 @@ sb_geom <- function(X){
 	stylized_betweenness[,l,] <- vecAngle(difference_vectors[indexs$Var1,],difference_vectors[indexs$Var2,])
 	}
 return(stylized_betweenness)}
+
+absb <- angle_based-stylized-betweeeness
