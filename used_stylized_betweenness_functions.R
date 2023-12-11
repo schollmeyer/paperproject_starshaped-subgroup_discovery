@@ -1,3 +1,7 @@
+# needed libraries:
+# celltrackR
+
+
 # object based stylized betweenness (OBSB)
 object_based_sytlized_betweenness <- function(context){
    n_objects <- nrow(context)
@@ -28,7 +32,7 @@ angle_based-stylized_betweenness <- function(X){
   for(l in (1:n_objects)){
     print(l)
 	difference_vectors <- X-X[l,]
-	stylized_betweenness[,l,] <- vecAngle(difference_vectors[indexs$Var1,],difference_vectors[indexs$Var2,])
+	stylized_betweenness[,l,] <- celltrackR::vecAngle(difference_vectors[indexs$Var1,],difference_vectors[indexs$Var2,])
 	}
 return(stylized_betweenness)}
 
