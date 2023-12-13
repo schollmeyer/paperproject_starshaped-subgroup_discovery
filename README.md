@@ -15,3 +15,7 @@ There are different applications from different fields: Social science, psychome
 
 The gene expression datasets can be found under:
 https://hemberg-lab.github.io/scRNA.seq.datasets/
+
+The gene filter is described here:
+
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5410170/
