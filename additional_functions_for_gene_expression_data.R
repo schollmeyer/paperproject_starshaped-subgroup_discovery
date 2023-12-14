@@ -3,7 +3,7 @@ gene_filter <- function(data, x_percent=6 ){
   # Note that also genes with sdtandard deviation of epsression zero are also deleted
   i <- NULL
   for(k in seq_len(ncol(data))){
-    if( mean(data[,k]>2) < x_percent | mean(x[,k]>0)> 1-x_percent |  sd(x[,k])==0){i <- c(i,k)}
+    if( mean(data[,k]>2) < x_percent/100 | mean(x[,k]>0)> 1-x_percent/100 |  sd(x[,k])==0){i <- c(i,k)}
   }
 return(data[,-i])}
 
