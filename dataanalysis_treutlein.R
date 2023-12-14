@@ -1,3 +1,30 @@
+##########################################
+# Import data 8code from hemberg-lab: https://github.com/hemberg-lab/scRNA.seq.datasets/blob/master/R/treutlein.R
+#########################################
+
+
+### DATA
+d <- read.table("nature13173-s4.txt")
+d <- t(d)
+genes <- d[,1][5:nrow(d)]
+# remove genes and bulk samples
+d <- d[,2:(ncol(d) - 2)]
+exprs_data <- as.data.frame(matrix(as.numeric(d[5:nrow(d),]), ncol = ncol(d)))
+rownames(exprs_data) <- genes
+colnames(exprs_data) <- d[1,]
+
+### ANNOTATIONS
+ann <- data.frame(cell_type1 = d[4,])
+rownames(ann) <- d[1,]
+
+### SINGLECELLEXPERIMENT
+source("../utils/create_sce.R")
+sceset <- create_sce_from_normcounts(exprs_data, ann)
+saveRDS(sceset, file = "treutlein.rds")
+
+############################################
+
+
 ## gene expression dataset (Treutlein: Reconstructing lineage hierarchies of the distal lung epithelium using single-cell RNA-seq
 ## https://www.nature.com/articles/nature13173
 
