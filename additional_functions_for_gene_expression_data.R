@@ -1,5 +1,5 @@
 gene_filter <- function(data, x_percent=6 ){
-  # gene filter as described in
+  # gene filter as described under https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5410170/
   # Note that also genes with sdtandard deviation of epsression zero are also deleted
   i <- NULL
   for(k in seq_len(ncol(data))){
