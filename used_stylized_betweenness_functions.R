@@ -44,3 +44,30 @@ get_angle_based_stylized_betweenness <- function(X){
 return(stylized_betweenness/180)}
 
 get_absb <- get_angle_based_stylized_betweenness
+
+
+##
+
+compute_attribute_counting_betweenness <- function(context) {
+  n_rows <- nrow(context)
+  n_cols <- ncol(context)
+  col_means <- colMeans(context)
+
+  betweenness <- array(0, rep(n_cols, 3))
+  pb <- utils::txtProgressBar(min = 0, max = n_cols, initial = 0)
+  for (k in seq_len(n_cols)) {
+    utils::setTxtProgressBar(pb, k)
+    for (m in seq_len(n_cols)) {
+      #temp <- rep(0, n_cols)
+      #i <- which(context[,k ] == 1 & context[,m ] == 1)
+      mask <- context[,k] & context[,l]
+      #temp[i] <- col_means[i]
+      for (l in seq_len(n_cols)) {
+        betweenness[k, l, m] <- sum(context[mask,l])#max(temp - context[l, ])
+      }
+    }
+  }
+
+  close(pb)
+  return(1 - betweenness)
+}
