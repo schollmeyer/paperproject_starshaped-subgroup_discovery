@@ -24,8 +24,8 @@ get_object_based_stylized_betweenness <- function(context,lambda=1){
 return(stylized_betweenness)}
 get_obsb <- get_object_based_stylized_betweenness
 
-# angle based stylized betweenness (ABSB)
-get_angle_based_stylized_betweenness <- function(X){
+# geometry based stylized betweenness (ABSB)
+get_geometry_based_stylized_betweenness <- function(X){
   n_objects <- nrow(X)
   stylized_betweenness <- array(0,rep(n_objects,3))
   indexs <- expand.grid(seq_len(n_objects),seq_len(n_objects))
@@ -43,7 +43,7 @@ get_angle_based_stylized_betweenness <- function(X){
   }
 return(stylized_betweenness/180)}
 
-get_absb <- get_angle_based_stylized_betweenness
+get_gbsb <- get_angle_based_stylized_betweenness
 
 
 ##

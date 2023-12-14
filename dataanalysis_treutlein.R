@@ -28,12 +28,15 @@ rownames(ann) <- d[1,]
 # manual construction of x and y:
  x <- t(exprs_data)
  x <- gene_filter(x)
+ x <- log2(1+x)
  dim(x)
  x <- scaling(x)
  
  context <- oofos:::get_auto_conceptual_scaling(x)
  
- y <- ann
+ # This context has VC dimension 80!!!
+ 
+ y <- ann$cell_type1
  table(y)/length(y)
  
 # cell_type1
@@ -43,6 +46,13 @@ rownames(ann) <- d[1,]
 objective <- oofos:::compute_objective(data.frame(y=y),"y","AT1") 
 
 
+gbsb <- get_gbsb(x)
+
+
+
+starshaped_discovery <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective,local_vc_dimension=8)
+starshaped_discovery$objval
+test <- oofos:::compute_starshaped_distr_test(starshaped_discovery, n_rep=100)
 
 
 ## gene expression dataset (Treutlein: Reconstructing lineage hierarchies of the distal lung epithelium using single-cell RNA-seq

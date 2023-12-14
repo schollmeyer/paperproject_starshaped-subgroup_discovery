@@ -46,10 +46,12 @@ context <- t(unique(t(context)))
 dim(context)
 
 set.seed(1234567)
-indexs <- sample(seq_len(ncol(context)),size=30000)
+indexs <- sample(seq_len(ncol(context)),size=20000)
 vc_model <- oofos::compute_extent_vc_dimension(context[,indexs])
 
 vc=gurobi::gurobi(vc_model,list(timelimit=60*20))
+vc$objval
+ vc dimension >= 70
 
 
 # compute objective
@@ -67,10 +69,10 @@ table(y)/length(y)
  table(objective)
 
 
- absb <- get_absb(x)
- max_absb <- max(absb)
+ gbsb <- get_gbsb(x)
+ max_gbsb <- max(gbsb)
  local_vc_dimensions <- rep(0,nrow(x))
- for(k in seq_len(nrow(x))){local_vc_dimensions[k] <- oofos:::compute_width(absb[k,,]>=max_absb/2.5)$width}
+ for(k in seq_len(nrow(x))){local_vc_dimensions[k] <- oofos:::compute_width(gbsb[k,,]>=max_gbsb)$width}
  
  table(local_vc_dimensions)
  
@@ -79,6 +81,6 @@ table(y)/length(y)
 # 90 
 
 
-starshaped_discovery <- oofos::discover_starshaped_subgroups(stylized_betweenness=absb,objective=objective,local_vc_dimension=9)
+starshaped_discovery <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective,local_vc_dimension=9)
 starshaped_discovery$objval
 test <- oofos:::compute_starshaped_distr_test(starshaped_discovery, n_rep=100)
