@@ -14,13 +14,14 @@ if (!require("BiocManager", quietly = TRUE))
 
 BiocManager::install("SingleCellExperiment")
 
+library(SingleCellExperiment)
 
 # read treulein data
 
-dat <- readRDS("deng.rds")
+dat <- readRDS("datasets/treutlein.rds")
 
 y <- colData(dat)$cell_type1
-x <- logcounts(dat)
+x <- counts(dat)
 x <- t(x)
 
 # apply gene filter like described here:  ????
