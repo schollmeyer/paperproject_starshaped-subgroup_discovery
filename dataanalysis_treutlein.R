@@ -1,10 +1,10 @@
 ##########################################
-# Import data 8code from hemberg-lab: https://github.com/hemberg-lab/scRNA.seq.datasets/blob/master/R/treutlein.R
+# Import data (code from hemberg-lab): https://github.com/hemberg-lab/scRNA.seq.datasets/blob/master/R/treutlein.R
 #########################################
 
 
 ### DATA
-d <- read.table("nature13173-s4.txt")
+d <- read.table("datasets/nature13173-s4.txt")
 d <- t(d)
 genes <- d[,1][5:nrow(d)]
 # remove genes and bulk samples
@@ -17,12 +17,32 @@ colnames(exprs_data) <- d[1,]
 ann <- data.frame(cell_type1 = d[4,])
 rownames(ann) <- d[1,]
 
+# This code does not work anymore
 ### SINGLECELLEXPERIMENT
-source("../utils/create_sce.R")
-sceset <- create_sce_from_normcounts(exprs_data, ann)
-saveRDS(sceset, file = "treutlein.rds")
+#source("../utils/create_sce.R")
+#sceset <- create_sce_from_normcounts(exprs_data, ann)
+#saveRDS(sceset, file = "treutlein.rds")
 
 ############################################
+
+# manual construction of x and y:
+ x <- t(exprs_data)
+ x <- gene_filter(x)
+ dim(x)
+ x <- scaling(x)
+ 
+ context <- oofos:::get_auto_conceptual_scaling(x)
+ 
+ y <- ann
+ table(y)/length(y)
+ 
+# cell_type1
+#     AT1      AT2       BP ciliated    Clara 
+#      41       12       13        3       11
+
+objective <- oofos:::compute_objective(data.frame(y=y),"y","AT1") 
+
+
 
 
 ## gene expression dataset (Treutlein: Reconstructing lineage hierarchies of the distal lung epithelium using single-cell RNA-seq
