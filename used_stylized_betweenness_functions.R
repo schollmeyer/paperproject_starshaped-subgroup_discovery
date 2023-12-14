@@ -3,7 +3,7 @@
 
 
 # object based stylized betweenness (OBSB)
-get_object_based_stylized_betweenness <- function(context){
+get_object_based_stylized_betweenness <- function(context,lambda=1){
    n_objects <- nrow(context)
    stylized_betweenness <- array(as.logical(FALSE),rep(n_objects,3))
    for( k in seq_len(n_objects)){
@@ -17,7 +17,7 @@ get_object_based_stylized_betweenness <- function(context){
 		   intent_3 <- intent_2 & context[l,]#pmin(intent_2, context[l,])
 		   extent_3 <- oofos:::compute_phi(intent_3,context)
 		   size_extent_3 <- sum(extent_3)
-		   stylized_betweenness[k,l,m] <- size_extent_2/size_extent_3
+		   stylized_betweenness[k,l,m] <-  1- (size_extent_3 - size_extent_2)/(lambda* n_objects+(1-lambda)* size_extent_3)
 		}
 	}
   }
@@ -47,6 +47,7 @@ get_absb <- get_angle_based_stylized_betweenness
 
 
 ##
+## veralteter Code
 
 compute_attribute_counting_betweenness <- function(context) {
   n_rows <- nrow(context)
