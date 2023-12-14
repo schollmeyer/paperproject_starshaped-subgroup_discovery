@@ -39,9 +39,15 @@ x <- scaling(x)
 #
 # generate formal context (with interordinal scaling) for some nalysis of x
 context <- oofos:::get_auto_conceptual_scaling(x)
+
+dim(context)
+# remove duplicated columns
+context <- t(unique(t(context)))
+dim(context)
+
 set.seed(1234567)
-indexs <- sample(seq_len(ncol(context)),size=70000)
-vc_model <- oofos::compute_extent_vc_dimension(context[,i])
+indexs <- sample(seq_len(ncol(context)),size=30000)
+vc_model <- oofos::compute_extent_vc_dimension(context[,indexs])
 
 vc=gurobi::gurobi(vc_model,list(timelimit=60*20))
 
