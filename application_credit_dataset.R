@@ -44,7 +44,7 @@ saveRDS(result_1,"results_credit_data/result_1.RDS")
 # add additional contsraints that are always valid for inetrordinally scaled variables x (implications of the form <= x \rightarrow not >= x+1 etc. 
 model_2 <- oofos:::add_attr_antiimplications(model)
 
-# use semioptima solution to tighten tthe search space via optimistic estimates (in the style of ***)
+# use semioptimal solution to tighten tthe search space via optimistic estimates (in the style of ***)
 model_2 <- oofos:::add_sos_constraints(model_2,result_1$objval)
 # add semioptimal solution as a start vector
 model_2$start <- round(result_1$x,2)
@@ -70,4 +70,4 @@ absb <- get_absb(as.matrix(dat[,indexs_numerical_variables]))
 
 saveRDS(absb,"results_credit_data/absb.RDS")
 
-discovery_absb <- oofos:::discover_starshaped_subgroups(stylized_betweenness=absb,objective=objective,local_vc_dimension=100) 
+discovery_absb <- oofos:::discover_starshaped_subgroups(stylized_betweenness=absb,objective=objective,local_vc_dimension=100,params=list(outputflag=1)) 
