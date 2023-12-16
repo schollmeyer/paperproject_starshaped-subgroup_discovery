@@ -24,6 +24,29 @@ get_object_based_stylized_betweenness <- function(context,lambda=1){
 return(stylized_betweenness)}
 get_obsb <- get_object_based_stylized_betweenness
 
+# attribute based stylized betweenness (ABSB)
+get_attribute_based_stylized_betweenness <- function(context,lambda=1){
+   n_objects <- nrow(context)
+   n_attributes <- ncol(context)
+   stylized_betweenness <- array(as.logical(FALSE),rep(n_objects,3))
+   for( k in seq_len(n_objects)){
+       intent_1 <- context[k,]
+	   print(k)
+	for( m in seq_len(n_objects)){
+	    intent_2 <- intent_1 & context[m,]#pmin(intent_1,context[m,])
+		#extent_2 <- oofos:::compute_phi(intent_2,context)
+		size_intent_2 <- sum(intent_2)
+		for( l in seq_len(n_objects)){
+		   intent_3 <- intent_2 & context[l,]#pmin(intent_2, context[l,])
+		   #extent_3 <- oofos:::compute_phi(intent_3,context)
+		   size_intent_3 <- sum(intent_3)
+		   stylized_betweenness[k,l,m] <-  1- (size_intent_2 - size_intent_3)/(lambda* n_attributes+(1-lambda)* size_intent_2)
+		}
+	}
+  }
+return(stylized_betweenness)}
+get_obsb <- get_object_based_stylized_betweenness
+
 # geometry based stylized betweenness (ABSB)
 get_geometry_based_stylized_betweenness <- function(X){
   n_objects <- nrow(X)
