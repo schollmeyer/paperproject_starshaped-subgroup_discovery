@@ -45,7 +45,7 @@ get_attribute_based_stylized_betweenness <- function(context,lambda=1){
 	}
   }
 return(stylized_betweenness)}
-get_obsb <- get_object_based_stylized_betweenness
+get_absb <- get_attribute_based_stylized_betweenness
 
 # geometry based stylized betweenness (ABSB)
 get_geometry_based_stylized_betweenness <- function(X){
