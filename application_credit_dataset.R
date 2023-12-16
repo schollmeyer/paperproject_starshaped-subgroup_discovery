@@ -30,11 +30,15 @@ table(objective)
 model <- oofos:::optimize_on_context_extents(context=context,objective=objective,binary_variables="all" )
 
 # optimize model under time constraint of 20 minutes for a first semioptimal solution
-result_1 <- gurobi::gurobi(model,list(timelimit=60*20))
+result_1 <- gurobi::gurobi(model,list(timelimit=60*40))
 
 result_1$objval
+# [1] 0.257619
+
 
 result_1$runtime
+# [1] 2400.381
+
 # save result
 saveRDS(result_1,"results_credit_data/result_1.RDS")
 
@@ -48,13 +52,16 @@ model_2 <- oofos:::add_attr_antiimplications(model)
 model_2 <- oofos:::add_sos_constraints(model_2,result_1$objval)
 # add semioptimal solution as a start vector
 model_2$start <- round(result_1$x,2)
-result_2 <- gurobi::gurobi(model_2,list(timelimit=60*20))
+result_2 <- gurobi::gurobi(model_2)
 
 
 result_2$objval
 
 # [1] 0.3519048
 # no improvement in 20 minutes
+
+# Optimization without timelimit
+result_2 <- gurobi::gurobi(model_2)
 
 # save result
 saveRDS(result_2,"results_credit_data/result_2.RDS")
