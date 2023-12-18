@@ -50,8 +50,8 @@ rownames(ann) <- d[1,]
 #      41       12       13        3       11
 
 objective <- oofos:::compute_objective(data.frame(y=y),"y","AT1") 
-obsb <- get_obsb(x)
-absb <- get_absb(x)
+obsb <- get_obsb(context)
+absb <- get_absb(context)
 gbsb <- get_gbsb(x)
 
 saveRDS(obsb,"results_treutlein/obsb.RDS")
@@ -59,10 +59,21 @@ saveRDS(absb,"results_treutlein/absb.RDS")
 saveRDS(gbsb,"results_treutlein/gbsb.RDS")
 
 
+# absb:
+starshaped_discovery_absb <- oofos::discover_starshaped_subgroups(stylized_betweenness=absb,objective=objective,local_vc_dimension=8)
+starshaped_discovery_absb$objval
+test_absb <- oofos:::compute_starshaped_distr_test(starshaped_discovery_absb, n_rep=100)
+saveRDS(starshaped_discovery_absb,"results_treutlein/starshaped_discovery_absb")
+saveRDS(test_absb,"results_treutlein/test_absb")
 
-starshaped_discovery <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective,local_vc_dimension=8)
-starshaped_discovery$objval
-test <- oofos:::compute_starshaped_distr_test(starshaped_discovery, n_rep=100)
+# gbsb:
+
+starshaped_discovery_gbsb <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective,local_vc_dimension=8)
+starshaped_discovery_gbsb$objval
+test_gbsb <- oofos:::compute_starshaped_distr_test(starshaped_discovery_gbsb, n_rep=100)
+saveRDS(starshaped_discovery_gbsb,"results_treutlein/starshaped_discovery_gbsb")
+saveRDS(test_gbsb,"results_treutlein/test_gbsb")
+
 
 
 ## gene expression dataset (Treutlein: Reconstructing lineage hierarchies of the distal lung epithelium using single-cell RNA-seq
