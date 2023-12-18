@@ -2,6 +2,12 @@
 # Import data (code from hemberg-lab): https://github.com/hemberg-lab/scRNA.seq.datasets/blob/master/R/treutlein.R
 #########################################
 
+## set working directory accordingly !!!
+
+# load additional functions for computing stylized betweenness:
+source("used_stylized_betweenness_functions.R")
+# load additional functions needed for gene expression data (gene filter and scaling has to be applied):
+source("additional_functions_for_gene_expression_data.R")
 
 ### DATA
 d <- read.table("datasets/nature13173-s4.txt")
@@ -44,9 +50,13 @@ rownames(ann) <- d[1,]
 #      41       12       13        3       11
 
 objective <- oofos:::compute_objective(data.frame(y=y),"y","AT1") 
-
-
+obsb <- get_obsb(x)
+absb <- get_absb(x)
 gbsb <- get_gbsb(x)
+
+saveRDS(obsb,"results_treutlein/obsb.RDS")
+saveRDS(absb,"results_treutlein/absb.RDS")
+saveRDS(gbsb,"results_treutlein/gbsb.RDS")
 
 
 
