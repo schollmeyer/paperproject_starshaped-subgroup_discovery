@@ -64,7 +64,23 @@ result_2$objval
 result_2 <- gurobi::gurobi(model_2)
 
 # save result
+# noch nicht geschen
 saveRDS(result_2,"results_credit_data/result_2.RDS")
+
+############################################################################
+# Classical Subgroup Discovery on a subset of size n=500
+############################################################################
+
+set.seed(1234567)
+indexs <- sample((1:1000),size=500)
+sampled_context <- context[indexs,]
+
+sampled_objective <- oofos:::compute_objective(dat[indexs,],"class","good")
+
+model_sampled <- oofos:::optimize_on_context_extents(context=sampled_context,objective=sampled_objective,binary_variables="all" )
+model_2_sampled <- oofos:::add_attr_antiimplications(model_sampled)
+model_2_sampled <- oofos:::add_sos_constraints(model_2_sampled,0.278)
+result_sampled <- gurobi::gurobi(model_2_sampled,list(timelimit=60*40))
 
 
 ############################################################################
