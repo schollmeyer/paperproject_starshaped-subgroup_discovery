@@ -18,7 +18,7 @@ objective <- oofos:::compute_objective(dat,"class","good")
 
 table(objective)
 #
-# 300 good states and 700 bad states
+# 700 good states and 300 bad states
 
 
 ############################################################################
