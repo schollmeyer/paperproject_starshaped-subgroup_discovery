@@ -70,7 +70,7 @@ saveRDS(test_absb,"results_treutlein/test_absb")
 
 starshaped_discovery_gbsb <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective,local_vc_dimension=8)
 starshaped_discovery_gbsb$objval
-test_gbsb <- oofos:::compute_starshaped_distr_test(starshaped_discovery_gbsb, n_rep=100)
+test_gbsb <- oofos:::compute_starshaped_distr_test(starshaped_discovery_gbsb, n_rep=1000)
 saveRDS(starshaped_discovery_gbsb,"results_treutlein/starshaped_discovery_gbsb")
 saveRDS(test_gbsb,"results_treutlein/test_gbsb")
 
