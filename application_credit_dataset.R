@@ -14,8 +14,8 @@ dim(dat)
 whole_context <- oofos:::get_auto_conceptual_scaling(dat[,-c(9,21)])
 #
 
-indexs <- sample((1:1000),size =1000)
-training_context <- whole_context[indexs,]
+indexs <- sample((1:1000),size =500)
+training_context <- oofos:::get_auto_conceptual_scaling(dat[indexs,-c(9,21)])#whole_context[indexs,]
 test_context <- whole_context[-indexs,]
 # remove duplicated columns
 #context <- t(unique(t(context)))
