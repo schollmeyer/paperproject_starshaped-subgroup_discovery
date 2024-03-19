@@ -72,6 +72,8 @@ n_rep <- 10000
 N <- 500
 rademacher_complexity <- rep(0,n_rep)
 vc_dimension <- rep(0,n_rep)
+cutting_value <- rep(0,n_rep)
+
 
 F_obsb <- ecdf(obsb)
 obsb <- F_obsb(obsb)
@@ -85,13 +87,32 @@ for(k in (1:n_rep)){
   vc_dimension[k] <- oofos::compute_width(obsb[l,,]>=cut_value)$width
   #vc_dimension[k] <- sample((10:300),size=1)
   #result <- cut_incidence(obsb[k,,],cut_value=vc_dimension[k], complexity_measure=width)
-  rademacher_complexity[k] <- compute_rademacher_complexity(obsb[l,,]>=cut_value)$complexity#result$incidence)$complexity
-
-  plot(vc_dimension,rademacher_complexity)
+  #rademacher_complexity[k] <- compute_rademacher_complexity(obsb[l,,]>=cut_value)$complexity#result$incidence)$complexity
+  cutting_value[k] <- cut_value
+  plot(log2(vc_dimension),(cutting_value))#rademacher_complexity)
    
 }
 
 cor(rademacher_complexity[(1:k)],vc_dimension[(1:k)]) 
+
+# [1] 0.9993353
+
 summary(lm(rademacher_complexity[(1:k)]~vc_dimension[(1:k)]))
   
-  
+# Call:
+#   lm(formula = rademacher_complexity[(1:k)] ~ vc_dimension[(1:k)])
+# 
+# Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -6.7397 -0.3556  0.0203  0.2680  3.3644 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)    
+# (Intercept)         0.185801   0.049516   3.752 0.000207 ***
+#   vc_dimension[(1:k)] 0.546162   0.001093 499.493  < 2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 0.8016 on 332 degrees of freedom
+# Multiple R-squared:  0.9987,	Adjusted R-squared:  0.9987 
+# F-statistic: 2.495e+05 on 1 and 332 DF,  p-value: < 2.2e-16
