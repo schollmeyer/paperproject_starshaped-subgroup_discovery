@@ -62,6 +62,21 @@ saveRDS(starshaped_discovery_gbsb,"results_treutlein/starshaped_discovery_gbsb")
 saveRDS(test_gbsb,"results_treutlein/test_gbsb")
 
 
-
+##### extensive analysis for gbsb
+set.seed(1234567)
+vc_dimensions <- seq(1,80,length.out=500)
+p_values <- rep(0,length(vc_dimensions))
+p_values_param <- rep(0,length(vc_dimensions))
+objvalues <- array(0,c(500,500))
+objval <- rep(0,500)
+for(k in (1:500)){
+  discovery <- oofos::discover_starshaped_subgroups(gbsb,objective=objective,local_vc_dimension = vc_dimensions[k])
+  test <- oofos::compute_starshaped_distr_test(discovery,n_rep=500)
+  objvalues[k,] <- test$objvalues
+  objval[k] <- discovery$objval
+  p_values[k] <- test$p_value
+  p_values_param[k] <-  (discovery$objval-mean(test$objvalues))/sd(test$objvalues)
+  plot(vc_dimensions,(p_values_param))
+}
 
 

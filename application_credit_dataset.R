@@ -70,7 +70,7 @@ saveRDS(result_1,"results_credit_data/result_1.RDS")
 model_2 <- oofos:::add_sos_constraints(model,result_1$objval)
 # add semioptimal solution as a start vector
 model_2$start <- round(result_1$x,2)
-result_2 <- gurobi::gurobi(model_2)
+result_2 <- gurobi::gurobi(model_2,list(PoolSolutions=20,PoolSearchMode=2))
 
 
 result_2$objval
