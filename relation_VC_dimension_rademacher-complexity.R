@@ -13,8 +13,8 @@ compute_rademacher_complexity <-function (incidence,n_rep=1000) {
   }
   incidence <- oofos:::compute_transitive_hull(incidence)
   diag(incidence) <- 1
-  incidence <- oofos:::compute_quotient_order(incidence)
-  n_rows <- nrow(incidence)
+  incidence <- oofos:::compute_pseudoreduction(incidence)
+  
   if (n_rows == 0) {
     return(list(complexity = 0))
   }
