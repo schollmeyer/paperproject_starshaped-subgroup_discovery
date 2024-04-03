@@ -33,25 +33,25 @@ rownames(ann) <- d[1,]
  x <- log2(1+x)
  dim(x)
  x <- scaling(x)
- 
+
  context <- oofos:::get_auto_conceptual_scaling(x)
- 
+
  # This context has VC dimension 80!!!
- 
+
  y <- ann$cell_type1
  table(y)/length(y)
- 
+
  # y
-#  AT1      AT2       BP ciliated    Clara 
-#  0.5125   0.1500   0.1625   0.0375   0.1375 
- 
-objective <- oofos:::compute_objective(data.frame(y=y),"y","AT1") 
+#  AT1      AT2       BP ciliated    Clara
+#  0.5125   0.1500   0.1625   0.0375   0.1375
+
+objective <- oofos:::compute_objective(data.frame(y=y),"y","AT1")
 
 gbsb <- get_gbsb(x)
 
 
 
-saveRDS(gbsb,"results_treutlein/absb.RDS")
+saveRDS(gbsb,"results_treutlein_gbsb/absb.RDS")
 
 
 # gbsb:
