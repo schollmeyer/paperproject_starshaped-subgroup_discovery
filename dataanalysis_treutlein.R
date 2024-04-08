@@ -67,11 +67,11 @@ set.seed(1234567)
 vc_dimensions <- seq(1,80,length.out=500)
 p_values <- rep(0,length(vc_dimensions))
 p_values_param <- rep(0,length(vc_dimensions))
-objvalues <- array(0,c(500,500))
-objval <- rep(0,500)
+objvalues <- array(0,c(500,100))
+objval <- rep(0,100)
 for(k in (1:500)){
-  discovery <- oofos::discover_starshaped_subgroups(gbsb,objective=objective,local_vc_dimension = vc_dimensions[k])
-  test <- oofos::compute_starshaped_distr_test(discovery,n_rep=500)
+  discovery <- oofos::discover_starshaped_subgroups(gbsb,objective=objective,complexity_control = vc_dimensions[k])
+  test <- oofos::compute_starshaped_distr_test(discovery,n_rep=100)
   objvalues[k,] <- test$objvalues
   objval[k] <- discovery$objval
   p_values[k] <- test$p_value
