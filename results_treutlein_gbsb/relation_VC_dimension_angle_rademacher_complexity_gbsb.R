@@ -97,19 +97,19 @@ for(k in (1:n_rep)){
 
 }
 
+saveRDS(vc_dimension,"results_treutlein_gbsb/vc_dimension.RDS")
+saveRDS(rademacher_complexity,"results_treutlein_gbsb/rademacher_complexity.RDS")
+saveRDS(cutting_value,"results_treutlein_gbsb/cutting_value.RDS")
+
+pplot <- ggplot(data=data.frame(x=vc_dimension[index],y=rademacher_complexity[index]*180), aes(x=x,y=y))
+pplot + layer( mapping = NULL,   position = "identity",   stat="identity",   geom = "point") +labs(x = "VC dimension",y="cutting value in degrees")
+
+pplot <- ggplot(data=data.frame(x=vc_dimension[index],y=cutting_value[index]*180), aes(x=x,y=y))
+pplot + layer( mapping = NULL,   position = "identity",   stat="identity",   geom = "point") +labs(x = "VC dimension",y="cutting value in degrees")
 
 
-pplot <- ggplot(data=data.frame(vc_dimension=vc_dimension,cutting_value=cutting_value*180), aes(vc_dimension=vc_dimension, cutting_value=cutting_value))
-
-
-pplot + layer(
-  +     mapping = NULL,
-  +   position = "identity",
-  +   stat="identity",
-  +   geom = "point") ++labs(x = "VC dimension",y="cutting value in degrees")
-
-
-cor(rademacher_complexity[(1:k)],vc_dimension[(1:k)])
+cor(rademacher_complexity[(1:k)],vc_dimension[(1:k)],method="kendall")
+cor(cutting_value[index],vc_dimension[index])
 
 # [1] 0.9993353
 
