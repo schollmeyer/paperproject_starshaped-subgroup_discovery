@@ -99,14 +99,16 @@ for(k in (1:n_rep)){
 
 
 
-pplot <- ggplot(data=data.frame(vc_dimension=vc_dimension,cutting_value=cutting_value*180), aes(vc_dimension=vc_dimension, cutting_value=cutting_value))
+pplot <- ggplot(data=data.frame(x=log2(vc_dimension),y=(cutting_value)), aes(x=x,y=y))
 
 
-pplot + layer(
-  +     mapping = NULL,
-  +   position = "identity",
-  +   stat="identity",
-  +   geom = "point") ++labs(x = "VC dimension",y="cutting value in degrees")
+pplot + layer( mapping = NULL, position = "identity",   stat="identity",   geom = "point") +labs(x = "log2(VC dimension)",y="cutting value OBSB")
+
+
+pplot <- ggplot(data=data.frame(x=vc_dimension,y=rademacher_complexity), aes(x=x,y=y))
+
+
+pplot + layer( mapping = NULL,   position = "identity",   stat="identity",   geom = "point") +labs(x = "VC dimension",y="Rademacher complexity")
 
 
 cor(rademacher_complexity[(1:k)],vc_dimension[(1:k)])
