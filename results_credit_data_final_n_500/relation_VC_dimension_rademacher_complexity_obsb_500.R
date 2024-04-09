@@ -1,4 +1,4 @@
-compute_rademacher_complexity <-function (incidence,n_rep=10000) {
+compute_rademacher_complexity <-function (incidence,n_rep=1000) {
   if (is.null(incidence)) {
     return(list(complexity = 0))
   }
@@ -69,44 +69,46 @@ cut_incidence <- function(incidence, cut_value, complexity_measure=width,interva
 
 
 n_rep <- 1000
-N <- 80
+N <- 500
 rademacher_complexity <- rep(0,n_rep)
 vc_dimension <- rep(0,n_rep)
 cutting_value <- rep(0,n_rep)
 
 
-gbsb <- readRDS("gbsb.RDS")
+obsb <- readRDS("obsb.RDS")
 
-F_gbsb <- ecdf(gbsb)
-gbsb <- F_gbsb(gbsb)
-dim(gbsb) <- c(N,N,N)
+F_obsb <- ecdf(obsb)
+obsb <- F_obsb(obsb)
+dim(obsb) <- c(N,N,N)
 set.seed(1234567)
 for(k in (1:n_rep)){
   l <- sample((1:N),size=1)
 
 
-  cut_value <- runif(1)
+  cut_value <- runif(1)^0.5
 
-  vc_dimension[k] <- oofos::compute_width(gbsb[l,,]>=cut_value)$width
+  vc_dimension[k] <- oofos::compute_width(obsb[l,,]>=cut_value)$width
   #vc_dimension[k] <- sample((10:300),size=1)
   #result <- cut_incidence(obsb[k,,],cut_value=vc_dimension[k], complexity_measure=width)
-  rademacher_complexity[k] <- compute_rademacher_complexity(gbsb[l,,]>=cut_value)$complexity#result$incidence)$complexity
+  rademacher_complexity[k] <- compute_rademacher_complexity(obsb[l,,]>=cut_value)$complexity#result$incidence)$complexity
   cutting_value[k] <- cut_value
-  index <- which(vc_dimension>=2&vc_dimension<=78)
+  index <- which(vc_dimension>=2&vc_dimension<=498)
   if(length(index)>1){plot(vc_dimension[index],rademacher_complexity[index])}
 
 }
 
 
 
-pplot <- ggplot(data=data.frame(vc_dimension=vc_dimension,cutting_value=cutting_value*180), aes(vc_dimension=vc_dimension, cutting_value=cutting_value))
+pplot <- ggplot(data=data.frame(x=log2(vc_dimension),y=(cutting_value)), aes(x=x,y=y))
 
 
-pplot + layer(
-  +     mapping = NULL,
-  +   position = "identity",
-  +   stat="identity",
-  +   geom = "point") ++labs(x = "VC dimension",y="cutting value in degrees")
+pplot + layer( mapping = NULL, position = "identity",   stat="identity",   geom = "point") +labs(x = "log2(VC dimension)",y="cutting value OBSB")
+
+
+pplot <- ggplot(data=data.frame(x=vc_dimension,y=rademacher_complexity), aes(x=x,y=y))
+
+
+pplot + layer( mapping = NULL,   position = "identity",   stat="identity",   geom = "point") +labs(x = "VC dimension",y="Rademacher complexity")
 
 
 cor(rademacher_complexity[(1:k)],vc_dimension[(1:k)])

@@ -82,7 +82,16 @@ for(k in (1:500)){
   plot(vc_dimensions,(p_values_param))
 }
 
-saveRDS(p_values_param,"results_treutlein_absb/p_values_param.RDS")
-saveRDS(objvalues,"results_treutlein_absb/objvalues.RDS")
-saveRDS(objval,"results_treutlein_absb/objval.RDS")
-saveRDS(vc_dimensions,"results_treutlein_absb/vc_dimensions.RDS")
+# saveRDS(p_values_param,"results_treutlein_absb/p_values_param.RDS")
+# saveRDS(objvalues,"results_treutlein_absb/objvalues.RDS")
+# saveRDS(objval,"results_treutlein_absb/objval.RDS")
+# saveRDS(vc_dimensions,"results_treutlein_absb/vc_dimensions.RDS")
+
+
+pplot <- ggplot(data=data.frame(x=vc_dimensions,y=p_values_param), aes(x=x,y=y))
+
+
+pplot + layer(mapping = NULL,   position = "identity",   stat="identity",  geom = "point") +labs(x = "VC dimension",y="significance in standard deviations")
+
+
+
