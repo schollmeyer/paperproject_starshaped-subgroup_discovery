@@ -19,3 +19,28 @@ https://hemberg-lab.github.io/scRNA.seq.datasets/
 The gene filter is described here:
 
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5410170/
+
+
+Documentation of the files:
+
+additional_functions.R: Code with algorithm for the computation of the empirical Rademcahercomplexity
+
+additional_functions_for_gene_expression_data.R: additional code for the import and preprocessing of gene expression data
+
+application_credit_dataset.R: Code for the starshaped subgroup discovery for the credit dataset
+
+dataanalysis_treutlein.R: Code for the analysis of the gene expression dataset (Treutlein *) Used stylized beweenness is the geometry based stylized betweenness (which uses angles)
+
+dataanalysis_treutlein_absb.R: Code for the analysis of the gene expression dataset (Treutlein *). Used stylized beweenness is the attribute based stylized betweenness (which counts how many attribues violate a formal implication)
+relation_VC_dimension_rademacher-complexity.R: Code for the visualization of the relation between the VC dimension and the Rademacher Complexity
+used_stylized_betweenness_functions.R: Implementation of the different stylized betweenness relations
+
+
+
+Outdated files and folders:
+
+versuch_gs_rademacher_complexity.R
+dataanalysis_yan.R
+results_credit_data
+results_treutlein
+results_yan
