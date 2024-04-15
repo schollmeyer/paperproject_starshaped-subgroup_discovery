@@ -30,12 +30,24 @@ additional_functions_for_gene_expression_data.R: additional code for the import 
 application_credit_dataset.R: Code for the starshaped subgroup discovery for the credit dataset
 
 dataanalysis_treutlein.R: Code for the analysis of the gene expression dataset (Treutlein *) Used stylized beweenness is the geometry based stylized betweenness (which uses angles)
+results_treutlein_absb: results for the gene expression data for the attribute based stylized betweenness
+
+results_treutlein_gbsb: results for the gene expression data for the geometry based stylized betweenness
+relation_VC_dimension_angle_rademacher_complexity_gbsb.R: Code for the visualization of the relation between the VC dimension and the Rademacher Complexity for the gene expression datset and the geometry based stylized betweennesss
+
 
 dataanalysis_treutlein_absb.R: Code for the analysis of the gene expression dataset (Treutlein *). Used stylized beweenness is the attribute based stylized betweenness (which counts how many attribues violate a formal implication)
-relation_VC_dimension_rademacher-complexity.R: Code for the visualization of the relation between the VC dimension and the Rademacher Complexity
+
 used_stylized_betweenness_functions.R: Implementation of the different stylized betweenness relations
 
+results_credit_data.R: results for the credit dataset, relation_VC_dimension_rademacher_complexity_obsb_500.R: : Code for the visualization of the relation between the VC dimension and the Rademacher Complexity for the credit dataset
 
+results_credit_data.R: results for the credit dataset, relation_VC_dimension_rademacher_complexity_obsb_500.R: : Code for the visualization of the relation between the VC dimension and the Rademacher Complexity for the credit dataset
+
+Outdated files and folders:
+
+
+results_treut
 
 Outdated files and folders:
 
@@ -45,3 +57,4 @@ results_credit_data
 results_treutlein
 results_yan
 versuch_gs_rademacher_complexity.R
+relation_VC_dimension_rademacher-complexity.R
