@@ -4,7 +4,7 @@ This is the Repository for the planned paper
 
 The implementation of the subgroup discoveries (including statistical tests and regularization) is done with the R-package 'oofos' ( https://github.com/schollmeyer/oofos )
 
-There are different applications from different fields: Social science, psychometrics, biology, machine learning (from which only one will later be contained in the paper):
+There are different applications from different fields: Social science, psychometrics, biology, machine learning (from which only the last two will later be contained in the paper):
 
     Dimensions of social justice ( R Code :...... )
     Item impact in Cognitive Diagnosis Models ( R Code: Application_example_cognitive_diagnosis_modeling.R )
