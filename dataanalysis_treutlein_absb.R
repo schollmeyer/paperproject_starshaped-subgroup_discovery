@@ -9,6 +9,7 @@ source("used_stylized_betweenness_functions.R")
 # load additional functions needed for gene expression data (gene filter and scaling has to be applied):
 source("additional_functions_for_gene_expression_data.R")
 
+library(ggplot2)
 ### DATA
 d <- read.table("datasets/nature13173-s4.txt")
 d <- t(d)
@@ -42,19 +43,33 @@ rownames(ann) <- d[1,]
  table(y)/length(y)
 
  # y
-#  AT1      AT2       BP ciliated    Clara
-#  0.5125   0.1500   0.1625   0.0375   0.1375
+ #  AT1      AT2       BP ciliated    Clara
+ #  0.5125   0.1500   0.1625   0.0375   0.1375
 
-objective <- oofos:::compute_objective(data.frame(y=y),"y","AT1")
+ objective <- oofos:::compute_objective(data.frame(y=y),"y","AT1")
 
-absb <- get_absb(context)
-saveRDS(absb,"results_treutlein_absb/absb.RDS")
+ #absb <- get_absb(context)
+ #saveRDS(absb,"results_treutlein_absb/absb.RDS")
+ #gbsb <- get_gbsb(context)
+ #saveRDS(gbsb,"results_treutlein_gbsb/gbsb.RDS")
 
-gbsb <- readRDS("results_treutlein_gbsb/gbsb.RDS")
+ gbsb <- readRDS("results_treutlein_gbsb/gbsb.RDS")
+ absb <- readRDS("results_treutlein_absb/absb.RDS")
 
-plot(absb,gbsb)
+ plot_indexs <- sample((1:80^3),size=1000)
+ pplot <- ggplot(data=data.frame(x=as.vector(gbsb)[plot_indexs],y=as.vector(absb)[plot_indexs]), aes(x=x,y=y))
+ pplot + layer(mapping = NULL,   position = "identity",   stat="identity",  geom = "point") +lims(x=c(0.18,0.41),y=c(0.85,0.975)) + labs(x = "gbsb",y="absb")
 
 
+ pplot <- ggplot(data=data.frame(x=gbsb,y=gbsb), aes(x=x,y=y))
+ pplot + layer(mapping = NULL,   position = "identity",   stat="identity",  geom = "point") +labs(x = "gbsb",y="absb")
+
+
+ # statistical test
+ starshaped_discovery_gbsb <- readRDS("results_treutlein/starshaped_discovery_gbsb")
+ test_gbsb <- readRDS("results_treutlein/test_gbsb")
+
+ ggplot(data=data.frame(x=test_gbsb$objvalues), aes(x)) +  lims(x=c(0,0.8)) + stat_ecdf(geom = "step", pad = TRUE, lwd=1.2) + geom_vline(xintercept=starshaped_discovery_gbsb$objval,lwd=1.2,col="darkblue")
 
 
 # absb:

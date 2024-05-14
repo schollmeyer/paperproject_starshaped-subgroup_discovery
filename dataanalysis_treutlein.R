@@ -1,7 +1,7 @@
 ##########################################
 # Import data (code from hemberg-lab): https://github.com/hemberg-lab/scRNA.seq.datasets/blob/master/R/treutlein.R
 #########################################
-
+library(ggplot2)
 ## set working directory accordingly !!!
 
 # load additional functions for computing stylized betweenness:
@@ -55,7 +55,7 @@ saveRDS(gbsb,"results_treutlein_gbsb/absb.RDS")
 
 
 # gbsb:
-starshaped_discovery_gbsb <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective,local_vc_dimension=8)
+starshaped_discovery_gbsb <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective, complexity_control = 8,complexity_measure=oofos::compute_width)
 starshaped_discovery_gbsb$objval
 test_gbsb <- oofos:::compute_starshaped_distr_test(starshaped_discovery_gbsb, n_rep=10000)
 saveRDS(starshaped_discovery_gbsb,"results_treutlein/starshaped_discovery_gbsb")
