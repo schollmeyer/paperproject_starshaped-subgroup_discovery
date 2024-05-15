@@ -47,12 +47,9 @@ rownames(ann) <- d[1,]
 
 objective <- oofos:::compute_objective(data.frame(y=y),"y","AT1")
 
-gbsb <- get_gbsb(x)
-
-
-
-saveRDS(gbsb,"results_treutlein_gbsb/absb.RDS")
-
+#gbsb <- get_gbsb(x)
+#saveRDS(gbsb,"results_treutlein_gbsb/absb.RDS")
+gbsb <- readRDS("results_treutlein_gbsb/gbsb.RDS")
 
 # gbsb:
 starshaped_discovery_gbsb <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective, complexity_control = 8,complexity_measure=oofos::compute_width)
@@ -63,15 +60,16 @@ saveRDS(test_gbsb,"results_treutlein/test_gbsb")
 
 
 ##### extensive analysis for gbsb
+n_rep <- 1000
 set.seed(1234567)
-vc_dimensions <- seq(1,80,length.out=500)
+vc_dimensions <- seq(1,80,length.out=80)
 p_values <- rep(0,length(vc_dimensions))
 p_values_param <- rep(0,length(vc_dimensions))
-objvalues <- array(0,c(500,100))
-objval <- rep(0,100)
-for(k in (1:500)){
+objvalues <- array(0,c(80,n_rep))
+objval <- rep(0,80)
+for(k in (1:80)){
   discovery <- oofos::discover_starshaped_subgroups(gbsb,objective=objective,complexity_control = vc_dimensions[k])
-  test <- oofos::compute_starshaped_distr_test(discovery,n_rep=100)
+  test <- oofos::compute_starshaped_distr_test(discovery,n_rep=n_rep)
   objvalues[k,] <- test$objvalues
   objval[k] <- discovery$objval
   p_values[k] <- test$p_value
