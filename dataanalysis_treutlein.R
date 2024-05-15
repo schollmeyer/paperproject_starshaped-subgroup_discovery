@@ -50,6 +50,7 @@ objective <- oofos:::compute_objective(data.frame(y=y),"y","AT1")
 #gbsb <- get_gbsb(x)
 #saveRDS(gbsb,"results_treutlein_gbsb/absb.RDS")
 gbsb <- readRDS("results_treutlein_gbsb/gbsb.RDS")
+dimnames(gbsb)[[1]] <- dimnames(gbsb)[[2]] <- dimnames(gbsb)[[3]] <- rownames(x)
 
 # gbsb:
 starshaped_discovery_gbsb <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective, complexity_control = 8,complexity_measure=oofos::compute_width)
