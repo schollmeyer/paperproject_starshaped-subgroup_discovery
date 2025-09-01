@@ -3,9 +3,10 @@ setwd("C:/Git/paperproject_starshaped-subgroup_discovery")
 # needed libraries
 library(foreign)
 library(rsubgroup)
+library(ggplot2)
 # load the data set credit ( https://archive.ics.uci.edu/dataset/144/statlog+german+credit+data)
 # Thisis already the curated dataset, compare TODO
-# The variable sex (column 9) will be later deleted because it is actually not 
+# The variable sex (column 9) will be later deleted because it is actually not
 # the variable sex but instead a combination of sex and marital status
 data(credit.data)
 dat <- credit.data
@@ -13,17 +14,17 @@ dim(dat)
 # [1] 1000   21
 
 #generate formal context of covariates (sex (column 9) and credit status (column 21) are excluded)
-
+# TODO: comment
 
 whole_context <- oofos:::get_auto_conceptual_scaling(dat[,-c(9,21)])
-# For the classical subgroup discoery we make a sample split approach because 
+# For the classical subgroup discoery we make a sample split approach because
 # optimizing under H0 is computationally very expensive
 set.seed(1234567)
-indexs <- sample((1:1000),size =500)
+indexs <- sample((1:1000),size =50)
 training_context <- whole_context[indexs,]
 test_context <- whole_context[-indexs,]
 
-# generate objective vector for optimization. This corresponds 
+# generate objective vector for optimization. This corresponds
 # (up to a multiplicative constant) to the
 # Piatetsky-Shapiro quality function for the target value credit-state==good
 objective <- oofos:::compute_objective(dat[indexs,],"class","good")
@@ -31,8 +32,8 @@ objective <- oofos:::compute_objective(dat[indexs,],"class","good")
 table(objective)
 
 # objective
-# -0.00628930817610063  0.00293255131964809 
-# 159                  341 
+# -0.00628930817610063  0.00293255131964809
+# 159                  341
 #
 # 341 good states and 159 bad states
 
@@ -44,13 +45,20 @@ table(objective)
 
 # generate gurobi model for classical subgroup discovery
 model <- oofos:::optimize_on_context_extents(context=training_context,objective=objective,binary_variables="all" )
-# For later computations it is more effective to treat the constraint matrix 
-# not as a simple triplet matrix 
+# For later computations it is more effective to treat the constraint matrix
+# not as a simple triplet matrix
 model$A <- as.matrix(model$A)
 # add additional constraints that may help to speed up the optimization
 model <- oofos:::add_attr_antiimplications(model)
 #compute a preliminary result with timelimit of 10 minits
-result_1 <- gurobi::gurobi(model,list(timelimit=60*10))
+# result_1 <- gurobi::gurobi(model,list(timelimit=60*10))
+
+
+
+# save result
+# saveRDS(result_1,"results_credit_data/result_1.RDS")
+
+result_1 <- readRDS("results_credit_data/result_1.RDS")
 
 result_1$objval
 # [1] 0.3223593
@@ -59,34 +67,60 @@ result_1$objval
 result_1$runtime
 # [1] 601.01
 
-# save result
-saveRDS(result_1,"results_credit_data/result_1.RDS")
-
-
-
 # use semioptimal solution to tighten the search space via optimistic estimates
 # (in the style of M. Boley and H. Grosskreutz. Non-redundant subgroup discovery us-
 # ing a closure system.)
 model_2 <- oofos:::add_sos_constraints(model,result_1$objval)
 # add semioptimal solution as a start vector
 model_2$start <- round(result_1$x,2)
-result_2 <- gurobi::gurobi(model_2,list(PoolSolutions=20,PoolSearchMode=2))
+# result_2 <- gurobi::gurobi(model_2,list(PoolSolutions=20,PoolSearchMode=2))
 
+
+#saveRDS(result_2,"results_credit_data/result_2.RDS")
+
+result_2 <- readRDS("results_credit_data/result_2.RDS")
 
 result_2$objval
 
 # [1] 0.3572364
 
-#overall runtie in hours 
+#Piatetsky-Shapiro quality value
+oofos:::quality(model_2,result_2)$piatetsky_shapiro
+#[1] 38.738
+
+# For comparison: subgroup discovery with R package rsubgroup:
+
+(result_rsubgroup[[1]])@quality
+#[1] 38.328
+# value is a little bit smaller than for exhaustive subgroup discovery via MILP
+
+task <- CreateSDTask(dat[indexs,], as.target("class", "good"), SDTaskConfig(attributes=colnames(dat),qf="ps",method="sdmap",k=1,maxlen=100,discretize=TRUE,nbins=3,nodefaults=FALSE))
+result_rsubgroup <- DiscoverSubgroupsByTask(task)
+result_rsubgroup$quality
+#overall runtie in hours
 (result_1$runtime  + result_2$runtime)/3600
 # [1] 9.11968
 
-saveRDS(result_2,"result_2.RDS")
+# Subgroup with largest value of the Piatetsky-Shapiro quality function
 
-############################################################################
-# Smple splitting test
-############################################################################
+extent <- round(result_2$x[(1:500)],2)
+intent <- round(result_2$x[-(1:500)])
+colnames(training_context)[which(intent==1)]
+# ...
+# manually read out extreme attributes:
 
+# checking_status: no checking
+# credit_amount in [522,11054]
+# duration in [4,60]  # *
+# age in [20,65] # min*
+# existing_credits in [1,3] # min*
+# installment_commitment in [1,4] #*
+# residence_since in [1,4] #*
+# num_dependents in[1,2] #*
+############################################################################
+# Sample splitting test
+############################################################################
+# TODO
 extent <- round(result_2$x[(1:500)],2)
 intent <- round(result_2$x[-(1:500)],2)
 extent_test <- oofos:::compute_phi(intent,test_context)
@@ -103,7 +137,7 @@ for(k in (1:n_rep)){
 plot(ecdf(h0))
 mean(h0 >= observed_test_statistic)
 
-#0 
+#0
 
 ############################################################################
 ############################################################################
@@ -151,4 +185,9 @@ absb <- get_absb(as.matrix(dat[,indexs_numerical_variables]))
 
 saveRDS(absb,"results_credit_data/absb.RDS")
 
-discovery_absb <- oofos:::discover_starshaped_subgroups(stylized_betweenness=absb,objective=objective,local_vc_dimension=100,params=list(outputflag=1)) 
+## obsb
+
+obsb <- readRDS("results_credit_data_final_n_500/obsb.RDS")
+ssd_vc_5 <- oofos:::discover_starshaped_subgroups(stylized_betweenness=obsb,objective=objective,complexity_measure=oofos:::compute_width,complexity_control=5,params=list(outputflag=1))
+saveRDS(ssd_vc_5,"results_credit_data_ssd_vc_5")
+test_vc_5 <- oofos::compute_starshaped_distr_test(ssd_vc_5)
