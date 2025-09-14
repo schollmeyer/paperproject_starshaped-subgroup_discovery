@@ -53,9 +53,10 @@ gbsb <- readRDS("results_treutlein_gbsb/gbsb.RDS")
 dimnames(gbsb)[[1]] <- dimnames(gbsb)[[2]] <- dimnames(gbsb)[[3]] <- rownames(x)
 
 # gbsb:
-starshaped_discovery_gbsb <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective, complexity_control = 8,complexity_measure=oofos::compute_width)
+starshaped_discovery_gbsb <- oofos::discover_starshaped_subgroups(stylized_betweenness=gbsb,objective=objective, complexity_control = 7,complexity_measure=oofos::compute_width)
 starshaped_discovery_gbsb$objval
-test_gbsb <- oofos:::compute_starshaped_distr_test(starshaped_discovery_gbsb, n_rep=10000)
+set.seed(1234567)
+test_gbsb <- oofos:::compute_starshaped_distr_test(starshaped_discovery_gbsb, n_rep=100000)
 saveRDS(starshaped_discovery_gbsb,"results_treutlein/starshaped_discovery_gbsb")
 saveRDS(test_gbsb,"results_treutlein/test_gbsb")
 

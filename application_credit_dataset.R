@@ -20,7 +20,7 @@ whole_context <- oofos:::get_auto_conceptual_scaling(dat[,-c(9,21)])
 # For the classical subgroup discoery we make a sample split approach because
 # optimizing under H0 is computationally very expensive
 set.seed(1234567)
-indexs <- sample((1:1000),size =50)
+indexs <- sample((1:1000),size =500)
 training_context <- whole_context[indexs,]
 test_context <- whole_context[-indexs,]
 
@@ -89,22 +89,20 @@ oofos:::quality(model_2,result_2)$piatetsky_shapiro
 #[1] 38.738
 
 # For comparison: subgroup discovery with R package rsubgroup:
-
+task <- CreateSDTask(dat[indexs,], as.target("class", "good"), SDTaskConfig(attributes=colnames(dat),qf="ps",method="sdmap",k=1,maxlen=100,discretize=TRUE,nbins=3,nodefaults=FALSE))
+result_rsubgroup <- DiscoverSubgroupsByTask(task)
 (result_rsubgroup[[1]])@quality
 #[1] 38.328
 # value is a little bit smaller than for exhaustive subgroup discovery via MILP
 
-task <- CreateSDTask(dat[indexs,], as.target("class", "good"), SDTaskConfig(attributes=colnames(dat),qf="ps",method="sdmap",k=1,maxlen=100,discretize=TRUE,nbins=3,nodefaults=FALSE))
-result_rsubgroup <- DiscoverSubgroupsByTask(task)
-result_rsubgroup$quality
+
 #overall runtie in hours
 (result_1$runtime  + result_2$runtime)/3600
 # [1] 9.11968
 
 # Subgroup with largest value of the Piatetsky-Shapiro quality function
-
 extent <- round(result_2$x[(1:500)],2)
-intent <- round(result_2$x[-(1:500)])
+intent <- round(result_2$x[-(1:500)],2)
 colnames(training_context)[which(intent==1)]
 # ...
 # manually read out extreme attributes:
@@ -117,6 +115,12 @@ colnames(training_context)[which(intent==1)]
 # installment_commitment in [1,4] #*
 # residence_since in [1,4] #*
 # num_dependents in[1,2] #*
+
+
+# For comparison: rsubgroup:
+# TODO
+
+
 ############################################################################
 # Sample splitting test
 ############################################################################
