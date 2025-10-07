@@ -28,6 +28,7 @@ test_context <- whole_context[-indexs,]
 # (up to a multiplicative constant) to the
 # Piatetsky-Shapiro quality function for the target value credit-state==good
 objective <- oofos:::compute_objective(dat[indexs,],"class","good")
+whole_objective <- oofos:::compute_objective(dat,"class","good")
 
 table(objective)
 
@@ -80,6 +81,10 @@ model_2$start <- round(result_1$x,2)
 
 result_2 <- readRDS("results_credit_data/result_2.RDS")
 
+#overall runtie in hours
+(result_1$runtime  + result_2$runtime)/3600
+# [1] 9.11968
+
 result_2$objval
 
 # [1] 0.3572364
@@ -96,9 +101,7 @@ result_rsubgroup <- DiscoverSubgroupsByTask(task)
 # value is a little bit smaller than for exhaustive subgroup discovery via MILP
 
 
-#overall runtie in hours
-(result_1$runtime  + result_2$runtime)/3600
-# [1] 9.11968
+
 
 # Subgroup with largest value of the Piatetsky-Shapiro quality function
 extent <- round(result_2$x[(1:500)],2)
@@ -115,6 +118,24 @@ colnames(training_context)[which(intent==1)]
 # installment_commitment in [1,4] #*
 # residence_since in [1,4] #*
 # num_dependents in[1,2] #*
+
+
+
+# Sample Splitting analysis of statistical significance
+ 
+pre_extent <- rep(0,1000)
+pre_extent[indexs[which(result_2$x>=0.5)]] <- 1
+intent <- oofos:::compute_psi(pre_extent,whole_context)
+extent <- oofos:::compute_phi(intent,whole_context)
+
+n_1 <- sum((extent*(whole_objective>0))[-indexs] )
+N_1 <- sum(extent[-indexs])
+
+n_2 <- sum(((1-extent)*(whole_objective>0))[-indexs] )
+N_2 <- sum((1-extent)[-indexs])
+
+X <- rbind(c(n_1, N_1-n_1),c(n_2,N_2-n_2))
+fisher.test(X,alternative="greater")
 
 
 # For comparison: rsubgroup:
@@ -191,7 +212,31 @@ saveRDS(absb,"results_credit_data/absb.RDS")
 
 ## obsb
 
+#obsb <- get_obsb(training_context)
 obsb <- readRDS("results_credit_data_final_n_500/obsb.RDS")
 ssd_vc_5 <- oofos:::discover_starshaped_subgroups(stylized_betweenness=obsb,objective=objective,complexity_measure=oofos:::compute_width,complexity_control=5,params=list(outputflag=1))
 saveRDS(ssd_vc_5,"results_credit_data_ssd_vc_5")
 test_vc_5 <- oofos::compute_starshaped_distr_test(ssd_vc_5)
+
+
+
+#sample splitting
+objective2 <- oofos:::compute_objective(dat[indexs,],"class","good",weights=c(rep(1,250),rep(0,250)))
+gc();ssd_vc_70_sample_splitting <- oofos:::discover_starshaped_subgroups(stylized_betweenness=obsb,objective=objective2,complexity_measure=oofos:::compute_width,complexity_control=70,params=list(outputflag=0))
+
+
+#TODO
+mask <- c(rep(0,250),rep(1,250))
+star <- ssd_vc_70_sample_splitting$star
+pre_extent[indexs[which(result_2$x>=0.5)]] <- 1
+intent <- oofos:::compute_psi(pre_extent,whole_context)
+extent <- oofos:::compute_phi(intent,whole_context)
+
+n_1 <- sum(mask * star *(objective>0))
+N_1 <- sum(mask * star )
+
+n_2 <- sum(mask * (1-star) *(objective>0))
+N_2 <- sum(mask *(1- star) )
+
+X <- rbind(c(n_1, N_1-n_1),c(n_2,N_2-n_2))
+fisher.test(X,alternative="greater")
