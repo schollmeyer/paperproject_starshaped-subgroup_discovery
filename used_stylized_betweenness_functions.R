@@ -58,7 +58,7 @@ get_object_based_stylized_betweenness_par <- function(context,lambda=1,n_tasks=6
       }
     }
     return(stylized_betweenness)}
-  stopCluster(cl)
+  #stopCluster(cl)
   }
 
 get_obsb_par <- get_object_based_stylized_betweenness_par
