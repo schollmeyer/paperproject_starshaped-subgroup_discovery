@@ -222,15 +222,14 @@ test_vc_5 <- oofos::compute_starshaped_distr_test(ssd_vc_5)
 
 #sample splitting
 objective2 <- oofos:::compute_objective(dat[indexs,],"class","good",weights=c(rep(1,250),rep(0,250)))
-gc();ssd_vc_70_sample_splitting <- oofos:::discover_starshaped_subgroups(stylized_betweenness=obsb,objective=objective2,complexity_measure=oofos:::compute_width,complexity_control=70,params=list(outputflag=0))
+gc();ssd_vc_40_sample_splitting <- oofos:::discover_starshaped_subgroups(stylized_betweenness=obsb,objective=objective2,complexity_measure=oofos:::compute_width,complexity_control=40,params=list(outputflag=0))
+gc();ssd_vc_50_sample_splitting <- oofos:::discover_starshaped_subgroups(stylized_betweenness=obsb,objective=objective2,complexity_measure=oofos:::compute_width,complexity_control=50,params=list(outputflag=0))
 
 
 #TODO
 mask <- c(rep(0,250),rep(1,250))
-star <- ssd_vc_70_sample_splitting$star
-pre_extent[indexs[which(result_2$x>=0.5)]] <- 1
-intent <- oofos:::compute_psi(pre_extent,whole_context)
-extent <- oofos:::compute_phi(intent,whole_context)
+star <- ssd_vc_40_sample_splitting$star
+
 
 n_1 <- sum(mask * star *(objective>0))
 N_1 <- sum(mask * star )
